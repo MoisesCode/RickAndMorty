@@ -80,7 +80,6 @@ export class CharacterListComponent implements OnInit {
       .pipe(take(1))
       .subscribe((params: ParamMap) => {
         this.query = params['q'];
-        console.log("Parametro: ", params);
         this.getDataFromService();
       })
   }
