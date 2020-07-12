@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 
 import { Character } from '@shared/components/interfaces/character.interface';
 import { CharacterService } from '@shared/services/character.service';
 import { take, filter } from 'rxjs/operators'
 import { ActivatedRoute, ParamMap, Router, NavigationEnd } from '@angular/router';
+
+import { DOCUMENT } from '@angular/common';
 
 type RequestInfo = {
   next: string;
@@ -23,8 +25,10 @@ export class CharacterListComponent implements OnInit {
   private query: string;
   private hideScroll = 200;
   private showScroll = 500;
-
+  showGoUpButton = false;
+  
   constructor(
+    @Inject(DOCUMENT) private document: Document, 
     private characterService: CharacterService,
     private route: ActivatedRoute,
     private router: Router
@@ -35,6 +39,28 @@ export class CharacterListComponent implements OnInit {
   ngOnInit(): void {
     //this.getDataFromService();
     this.getCharactersFormSearch();
+  }
+
+  @HostListener('window:scroll',[])
+  onWindowsScroll():void{
+    const yOffSet = window.pageYOffset;
+    if((yOffSet || this.document.documentElement.scrollTop || this.document.body.scrollTop) > this.showScroll){
+      this.showGoUpButton = true;
+    }else if((this.showGoUpButton && (yOffSet || this.document.documentElement.scrollTop || this.document.body.scrollTop)) < this.hideScroll ){
+      this.showGoUpButton = false;
+    }
+  }
+
+  onScrollDown(): void {
+    if(this.info.next){
+      this.pageNum++;
+      this.getDataFromService();
+    }
+  }
+
+  onScrollTop():void {
+    this.document.body.scrollTop = 0; //Safari
+    this.document.documentElement.scrollTop = 0; //Otros navegadores
   }
 
   private onChangeUrl(): void{

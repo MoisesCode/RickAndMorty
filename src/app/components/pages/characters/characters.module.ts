@@ -5,11 +5,11 @@ import { CharacterDetailsComponent } from '@characters/character-details/charact
 import { CharacterListComponent } from '@characters/character-list/character-list.component';
 import { RouterModule } from '@angular/router';
 import { CharacterComponent } from './character.component';
-
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 const myComponents = [CharacterDetailsComponent, CharacterListComponent, CharacterComponent];
 @NgModule({
   declarations: [ ... myComponents ],
-  imports: [ CommonModule, RouterModule ],
+  imports: [ CommonModule, RouterModule, InfiniteScrollModule ],
   exports:[ ... myComponents ]
 })
 export class CharactersModule { }
